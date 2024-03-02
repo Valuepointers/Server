@@ -20,11 +20,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 ########## Secret Variables ##########
-BASE_URL = os.getenv('BASE_URL')
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-KAKAO_REST_API_KEY= os.getenv('KAKAO_REST_API_KEY')
-CLIENT_SECRET_KEY= os.getenv('CLIENT_SECRET_KEY')
-REDIRECT_URI= os.getenv('REDIRECT_URI')
+BASE_URL = os.getenv("BASE_URL")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+KAKAO_REST_API_KEY = os.getenv("KAKAO_REST_API_KEY")
+CLIENT_SECRET_KEY = os.getenv("CLIENT_SECRET_KEY")
+REDIRECT_URI = os.getenv("REDIRECT_URI")
 
 
 # Quick-start development settings - unsuitable for production
@@ -49,34 +49,44 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
     ##### DRF #####
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth.registration',
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth.registration",
     ##### end #####
-    
-    #application
+    # application
     "tester",
 ]
 #################### Auth Library Settings ####################
 REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'my-app-auth'
-JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+JWT_AUTH_COOKIE = "my-app-auth"
+JWT_AUTH_REFRESH_COOKIE = "my-refresh-token"
 
 SITE_ID = 1
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+REST_AUTH = {
+    "USE_JWT": True,
+    'JWT_AUTH_COOKIE': 'my-app-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+    'JWT_AUTH_SECURE': True,  # HTTPS를 사용할 경우 True로 설정
+    'JWT_AUTH_HTTPONLY': True, # HTTPS를 사용할 경우 True로 설정
+    'JWT_AUTH_SAMESITE': 'Lax',
+    
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'OLD_PASSWORD_FIELD_ENABLED': True,
+}
 #################### end ####################
 
 MIDDLEWARE = [
@@ -87,9 +97,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
     ##### allauth #####
-    'allauth.account.middleware.AccountMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     ##### end #####
 ]
 
@@ -128,7 +137,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 ########## User Model Changed ##########
-AUTH_USER_MODEL = 'tester.User'
+AUTH_USER_MODEL = "tester.User"
 
 ########## PASSWORD CHECK ##########
 AUTH_PASSWORD_VALIDATORS = [
@@ -148,13 +157,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ########## JWT Settings ##########
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # 인증된 사용자만 접근
-        'rest_framework.permissions.IsAdminUser',  # 관리자만 접근
-        'rest_framework.permissions.AllowAny',  # 누구나 접근
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",  # 인증된 사용자만 접근
+        "rest_framework.permissions.IsAdminUser",  # 관리자만 접근
+        "rest_framework.permissions.AllowAny",  # 누구나 접근
     ),
 }
 
@@ -162,10 +171,9 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
-
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": "",
@@ -174,19 +182,15 @@ SIMPLE_JWT = {
     "JSON_ENCODER": None,
     "JWK_URL": None,
     "LEEWAY": 0,
-
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "kakao_id",
     "USER_ID_CLAIM": "kakao_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
     "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-
     "JTI_CLAIM": "jti",
-
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(days=30),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=30),

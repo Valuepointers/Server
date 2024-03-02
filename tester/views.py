@@ -70,15 +70,18 @@ class KakaoSignUpView(APIView):
         # print(profile_json)
         ##### end #####
         
-        ###### User Data Save ######
+        # User Data Save
         kakao_id = profile_json["id"]
-        email = profile_json["email"]
-        # profile_image = profile_json['kakao_account']['profile']['thumbnail_image_url']
+        email = profile_json.get("email")  # .get 메소드를 사용하여 KeyError를 방지
+        # profile_image = profile_json.get('kakao_account', {}).get('profile', {}).get('thumbnail_image_url')
+
+        # 이메일이 없는 경우를 처리하는 로직 추가
+        if not email:
+            # 이메일이 없는 경우에 대한 처리, 예: 임의의 이메일 생성, 에러 반환 등
+            email="kevin5166@naver.com"
         user, created = User.objects.get_or_create(email=email, kakao_id=kakao_id)
-        # user.profile_image = profile_image
-        user.save()
-        ##### end #####
-        #################### end ####################        
+        # user.profile_image = profile_image if profile_image else user.profile_image
+        user.save()    
 
         #################### create JWT Token ####################
         token = TokenObtainPairSerializer.get_token(user)

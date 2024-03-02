@@ -10,5 +10,7 @@ urlpatterns = [
     path('kakao/code/', kakao_auth_code),
     path('kakao/login/', KakaoSignUpView.as_view()),
     path('kakao/login/refresh/', TokenRefreshView.as_view()),
-    path('registration/', include('dj_rest_auth.registration.urls')),
+    
+    path('', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls'))
 ]

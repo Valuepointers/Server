@@ -27,23 +27,21 @@ import requests
 from requests.exceptions import RequestException, JSONDecodeError
 
 from django.db import models
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-
 class UserManager(BaseUserManager):
-    def create_user(self, kakao_id, password=None, **extra_fields):
-        if not kakao_id:
-            raise ValueError('The given kakao_id must be set')
-
-        user = self.model(
-            kakao_id=kakao_id,
-            **extra_fields
-        )
+    def create_user(self, email, password=None, kakao_id=None, **extra_fields):
+        if not email:
+            raise ValueError('The given email must be set')
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, kakao_id=kakao_id, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, kakao_id, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, kakao_id=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -52,41 +50,15 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(kakao_id, password, **extra_fields)
-
+        return self.create_user(email, password, kakao_id, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
-    kakao_id = models.CharField(max_length=255, unique=True)
-
-    # profile_image = models.URLField(blank=True, null=True, default="")
-    # company = models.CharField(max_length=255, blank=True, null=True)
-    # following = models.ManyToManyField(
-        # 'self', symmetrical=False, related_name='followers')
-    # is_open = models.BooleanField(default=True)
-    # is_active = models.BooleanField(default=True)
+    kakao_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'kakao_id'
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['kakao_id']  # email은 USERNAME_FIELD로 사용되므로 REQUIRED_FIELDS에 포함시키지 않음
 
-    def __str__(self):
-        return self.kakao_id
-
-    def follow(self, kakao_id):
-        user = User.objects.get(kakao_id=kakao_id)
-        self.following.add(user)
-
-    def unfollow(self, kakao_id):
-        user = User.objects.get(kakao_id=kakao_id)
-        self.following.remove(user)
-
-    def is_following(self, kakao_id):
-        return self.following.filter(kakao_id=kakao_id).exists()
-
-    def is_followed_by(self, kakao_id):
-        return self.followers.filter(kakao_id=kakao_id).exists()
-
-    # def get_studies(self):
-        # return list(self.joined_studies.all())
