@@ -68,11 +68,12 @@ INSTALLED_APPS = [
 #################### Auth Library Settings ####################
 SITE_ID = 1
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'  # username을 사용자 모델의 식별 필드로 사용
+ACCOUNT_USERNAME_REQUIRED = True  # username 필드를 필수로 설정
+ACCOUNT_EMAIL_REQUIRED = True  # 이메일 필드는 필수
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # 인증 방법으로 이메일 사용
+ACCOUNT_EMAIL_VERIFICATION = "none"  # 이메일 검증은 수행하지 않음 (필요에 따라 변경 가능)
+
 
 REST_AUTH = {
     "USE_JWT": True,
@@ -81,7 +82,6 @@ REST_AUTH = {
     'JWT_AUTH_SECURE': True,  # HTTPS를 사용할 경우 True로 설정
     'JWT_AUTH_HTTPONLY': True, # HTTPS를 사용할 경우 True로 설정
     'JWT_AUTH_SAMESITE': 'Lax',
-    
     'LOGOUT_ON_PASSWORD_CHANGE': True,
     'OLD_PASSWORD_FIELD_ENABLED': True,
 }
@@ -93,18 +93,18 @@ AUTH_USER_MODEL = "tester.User"
 
 ########## PASSWORD CHECK ##########
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 ########## JWT Settings ##########
