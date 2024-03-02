@@ -34,8 +34,7 @@ class KakaoSignUpView(APIView):
 
     def post(self, request):
         authorization_code = request.data.get("code")
-        # print(authorization_code)
-
+        print(authorization_code)
         #################### get access token ####################
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         data = {
@@ -67,7 +66,7 @@ class KakaoSignUpView(APIView):
             "https://kapi.kakao.com/v2/user/me", headers=headers
         )
         profile_json = kakao_profile.json()
-        # print(profile_json)
+        print(profile_json)
         ##### end #####
         
         # User Data Save
